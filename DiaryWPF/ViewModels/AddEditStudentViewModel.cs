@@ -1,4 +1,5 @@
 ﻿using DiaryWPF.Commands;
+using DiaryWPF.Models.Domains;
 using DiaryWPF.Models.Wrappers;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -8,6 +9,8 @@ namespace DiaryWPF.ViewModels
 {
     public class AddEditStudentViewModel : ViewModelBase
     {
+        private Repository _repository = new Repository();
+
         public AddEditStudentViewModel(StudentWrapper student = null)
         {
             CloseCommand = new RelayCommand(Close);
@@ -78,8 +81,8 @@ namespace DiaryWPF.ViewModels
             }
         }
 
-        private ObservableCollection<GroupWrapper> _group;
-        public ObservableCollection<GroupWrapper> Groups
+        private ObservableCollection<Group> _group;
+        public ObservableCollection<Group> Groups
         {
             get { return _group; }
             set
@@ -91,18 +94,19 @@ namespace DiaryWPF.ViewModels
 
         private void InitGroups()
         {
-            Groups = new ObservableCollection<GroupWrapper>
-            {
-                new GroupWrapper { Id = 0, Name = "-- brak --" },
-                new GroupWrapper { Id = 1, Name = "1A" },
-                new GroupWrapper { Id = 2, Name = "2A" }
-            };
+            var groups = _repository.GetGroups();
+            groups.Insert(0, new Group() { Id = 0, Name = "-- brak --" });
 
-            Student.Group.Id = 0;
+            Groups = new ObservableCollection<Group>(groups);
+
+            SelectedGroupId = Student.Group.Id;
         }
 
         private void Confirm(object obj)
         {
+            if (!Student.IsValid)
+                return;
+
             if (!IsUpdate)
                 AddStudent();
             else
@@ -113,10 +117,12 @@ namespace DiaryWPF.ViewModels
 
         private void UpdateStudent()
         {
+            _repository.UpdateStudent(Student);
         }
 
         private void AddStudent()
         {
+            _repository.AddStudent(Student);
         }
 
         private void Close(object obj)

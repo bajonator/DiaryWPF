@@ -1,11 +1,15 @@
-﻿namespace DiaryWPF.Models.Wrappers
+﻿using System.ComponentModel;
+
+namespace DiaryWPF.Models.Wrappers
 {
-    public class StudentWrapper
+    public class StudentWrapper : IDataErrorInfo
     {
         public StudentWrapper()
         {
             Group = new GroupWrapper();
         }
+
+
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -17,6 +21,56 @@
         public string ForeignLang { get; set; }
         public bool Activities { get; set; }
         public GroupWrapper Group { get; set; }
+
+        private bool _isFirstNameValid;
+        private bool _isLastNameValid;
+
+
+        public string this[string columnName]
+        {
+            get
+            {
+                switch (columnName)
+                {
+                    case nameof(FirstName):
+                        if (string.IsNullOrWhiteSpace(FirstName))
+                        {
+                            Error = "Pole Imię jest wymagane.";
+                            _isFirstNameValid = false;
+                        }
+                        else
+                        {
+                            Error = string.Empty;
+                            _isFirstNameValid = true;
+                        }
+                        break;
+                    case nameof(LastName):
+                        if (string.IsNullOrWhiteSpace(LastName))
+                        {
+                            Error = "Pole Nazwisko jest wymagane.";
+                            _isLastNameValid = false;
+                        }
+                        else
+                        {
+                            Error = string.Empty;
+                            _isLastNameValid = true;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                return Error;
+            }
+        }
+
+        public string Error { get; set; }
+
+        public bool IsValid
+        {
+            get
+            {
+                return _isFirstNameValid && _isLastNameValid && Group.IsValid;
+            }
+        }
     }
 }
-    

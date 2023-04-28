@@ -1,4 +1,5 @@
 ﻿using DiaryWPF.Commands;
+using DiaryWPF.Models.Domains;
 using DiaryWPF.Models.Wrappers;
 using DiaryWPF.Views;
 using MahApps.Metro.Controls;
@@ -14,7 +15,7 @@ namespace DiaryWPF.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-
+        private Repository _repository = new Repository();
         public MainViewModel()
         {
 
@@ -70,8 +71,8 @@ namespace DiaryWPF.ViewModels
             }
         }
 
-        private ObservableCollection<GroupWrapper> _group;
-        public ObservableCollection<GroupWrapper> Groups
+        private ObservableCollection<Group> _group;
+        public ObservableCollection<Group> Groups
         {
             get { return _group; }
             set
@@ -82,24 +83,20 @@ namespace DiaryWPF.ViewModels
         }
         private void RefreshDiary()
         {
-            Students = new ObservableCollection<StudentWrapper>
-            {
-                new StudentWrapper() {FirstName = "Waldek", LastName = "Szwajłyk", Group = new GroupWrapper { Id = 1 } },
-                new StudentWrapper() {FirstName = "Piotr", LastName = "Nowak", Group = new GroupWrapper { Id = 1 } }
-            };
+            Students = new ObservableCollection<StudentWrapper>(
+                _repository.GetStudents(SelectedGroupId));
         }
 
         private void InitGroups()
         {
-            Groups = new ObservableCollection<GroupWrapper>
-            {
-                new GroupWrapper { Id = 0, Name = "Wszystkie" },
-                new GroupWrapper { Id = 1, Name = "1A" },
-                new GroupWrapper { Id = 2, Name = "2A" }
-            };
+            var groups =_repository.GetGroups();
+            groups.Insert(0, new Group() { Id = 0, Name = "Wszystkie" });
+
+            Groups = new ObservableCollection<Group>(groups);
 
             SelectedGroupId = 0;
         }
+
         private void RefreshStudents(object obj)
         {
             RefreshDiary();
@@ -116,6 +113,8 @@ namespace DiaryWPF.ViewModels
             var dialog = await metroWindow.ShowMessageAsync("Usuwanie ucznia", $"Czy na pewno chcesz usunąć ucznia {SelectedStudent.FirstName} {SelectedStudent.LastName}?", MessageDialogStyle.AffirmativeAndNegative);
             if (dialog != MessageDialogResult.Affirmative)
                 return;
+
+            _repository.DeleteStudent(SelectedStudent.Id);
 
             RefreshDiary();
         }
