@@ -217,6 +217,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ChangeSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -244,11 +248,13 @@
     <Compile Include="Models\Domains\Group.cs" />
     <Compile Include="Models\Domains\Rating.cs" />
     <Compile Include="Models\Domains\Student.cs" />
+    <Compile Include="Models\UserSettings.cs" />
     <Compile Include="Models\Subject.cs" />
     <Compile Include="Models\Wrappers\GroupWrapper.cs" />
     <Compile Include="Models\Wrappers\StudentWrapper.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="ViewModels\AddEditStudentViewModel.cs" />
+    <Compile Include="ViewModels\ChangeSettingsViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\AddEditStudentView.xaml.cs">
@@ -257,6 +263,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\ChangeSettingsView.xaml.cs">
+      <DependentUpon>ChangeSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -287,7 +296,7 @@
       <DependentUpon>202304271511175_SetLastNameMaxLengthAndRequiredInStudentsTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -301,6 +310,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <SplashScreen Include="25.gif" />
     <Content Include="DbScripts\202304271511175_SetLastNameMaxLengthAndRequiredInStudentsTable.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
